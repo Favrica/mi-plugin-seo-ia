@@ -258,16 +258,16 @@ function mi_plugin_seo_ia_register_menu() {
         'mi-plugin-seo-ia-posts',
         'mi_plugin_seo_ia_render_generated_posts_page'
     );
-    add_submenu_page(
-        'mi-plugin-seo-ia',
-        'Documentación',
-        'Documentación',
-        'manage_options',
-        'mi-plugin-seo-ia-docs',
-        function() {
-            echo '<div class="wrap"><h1>Documentación</h1><p>Consulta la documentación en <a href="' . plugins_url('docs/USER_GUIDE.md', __FILE__) . '" target="_blank">Guía del Usuario</a> y <a href="' . plugins_url('docs/DEV_GUIDE.md', __FILE__) . '" target="_blank">Guía para Desarrolladores</a>.</p></div>';
-        }
-    );
+	add_submenu_page(
+		'mi-plugin-seo-ia',
+		'Documentación',
+		'Documentación',
+		'manage_options',
+		'mi-plugin-seo-ia-docs',
+		function() {
+			echo '<div class="wrap"><h1>Documentación</h1><p>Consulta la documentación en <a href="https://github.com/Favrica/mi-plugin-seo-ia/blob/main/docs/USER_GUIDE.md" target="_blank">Guía del Usuario</a> y <a href="https://github.com/Favrica/mi-plugin-seo-ia/blob/main/docs/DEV_GUIDE.md" target="_blank">Guía para Desarrolladores</a>.</p></div>';
+		}
+	);
 }
 
 add_action('admin_enqueue_scripts', 'mi_plugin_seo_ia_enqueue_scripts');
@@ -334,7 +334,7 @@ function mi_plugin_seo_ia_check_updates($transient) {
 
     $plugin_slug = plugin_basename(__FILE__);
     $current_version = '1.1';
-    $update_url = 'https://api.github.com/repos/tu-usuario/mi-plugin-seo-ia/releases/latest';
+    $update_url = 'https://api.github.com/repos/Favrica/mi-plugin-seo-ia/releases/latest';
 
     $response = wp_remote_get($update_url);
     if (is_wp_error($response)) {
@@ -342,13 +342,13 @@ function mi_plugin_seo_ia_check_updates($transient) {
     }
 
     $data = json_decode(wp_remote_retrieve_body($response), true);
-    $new_version = $data['tag_name'] ?? $current_version;
+    $new_version = ltrim($data['tag_name'] ?? $current_version, 'v'); // e.g., "v1.2" -> "1.2"
 
     if (version_compare($new_version, $current_version, '>')) {
         $transient->response[$plugin_slug] = (object) [
             'slug' => 'mi-plugin-seo-ia',
             'new_version' => $new_version,
-            'url' => 'https://github.com/tu-usuario/mi-plugin-seo-ia',
+            'url' => 'https://github.com/Favrica/mi-plugin-seo-ia',
             'package' => $data['assets'][0]['browser_download_url'] ?? ''
         ];
     }
@@ -362,7 +362,7 @@ function mi_plugin_seo_ia_plugin_info($api, $action, $args) {
         return $api;
     }
 
-    $response = wp_remote_get('https://api.github.com/repos/tu-usuario/mi-plugin-seo-ia/releases/latest');
+    $response = wp_remote_get('https://api.github.com/repos/Favrica/mi-plugin-seo-ia/releases/latest');
     if (is_wp_error($response)) {
         return $api;
     }
@@ -371,7 +371,7 @@ function mi_plugin_seo_ia_plugin_info($api, $action, $args) {
     $api = new stdClass();
     $api->name = 'Mi Plugin SEO con IA';
     $api->slug = 'mi-plugin-seo-ia';
-    $api->version = $data['tag_name'] ?? '1.1';
+    $api->version = ltrim($data['tag_name'] ?? '1.1', 'v');
     $api->author = 'SEO Sniffer';
     $api->download_link = $data['assets'][0]['browser_download_url'] ?? '';
     $api->sections = ['description' => $data['body'] ?? 'Plugin que utiliza IA para SEO y contenido.'];
