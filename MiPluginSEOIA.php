@@ -2,7 +2,7 @@
 /*
 Plugin Name: Mi Plugin SEO con IA
 Description: Plugin que utiliza IA para generar palabras clave, títulos, meta descripciones y contenido relacionado.
-Version: 1.1
+Version: 1.2  // Cambia de 1.1 a 1.2
 Author: SEO Sniffer
 */
 
@@ -22,7 +22,7 @@ function is_premium_user() {
 }
 
 function mi_plugin_seo_ia_render_admin_page() {
-    $message = '';
+    $message .= '<p>¡Actualizado a la versión 1.2!</p>';
     $log_content = '';
     ob_start();
 
